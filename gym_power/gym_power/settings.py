@@ -138,12 +138,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 import os
 
-TELEGRAM_BOT_TOKEN = "8216061394:AAFIqNZyBOU7O79HHSpnxSzX-buu26gfPgY"
+TELEGRAM_BOT_TOKEN = "<Tu Telegram Bot Token>"
 LOGIN_REDIRECT_URL = '/home/'  
 LOGOUT_REDIRECT_URL = '/login/' 
 
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
-    #"https://wishfully-glaciological-bristol.ngrok-free.dev"
 ]
