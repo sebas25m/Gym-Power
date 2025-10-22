@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar Notificación</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e1e2f, #3c3c64);
+      font-family: "Segoe UI", sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: #2c2c3e;
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 500px;
+      width: 90%;
+    }
+    h1 {
+      color: #00e0ff;
+      text-align: center;
+    }
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: bold;
+      opacity: 0.95;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .alert-success {
+      background-color: #2ecc71;
+    }
+    .alert-error {
+      background-color: #e74c3c;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input, textarea, select {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background-color: #0088cc;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00aaff;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #00e0ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>📢 Enviar Notificación</h1>
+
+    <!-- 🔔 BLOQUE DE MENSAJES -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <label>Destinatario:</label>
+      <select name="destinatario" required>
+        {% for usuario in usuarios %}
+          <option value="{{ usuario.username }}">{{ usuario.username }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Título:</label>
+      <input type="text" name="titulo" required>
+
+      <label>Descripción:</label>
+      <textarea name="descripcion" rows="3" required></textarea>
+
+      <label>Fecha de envío:</label>
+      <input type="datetime-local" name="fecha_envio" required>
+
+      <button type="submit">Enviar</button>
+    </form>
+    <a href="{% url 'home' %}" class="back-link">⬅ Volver al Home</a>
+  </div>
+
+  <script>
+    
+    setTimeout(() => {
+      document.querySelectorAll(".alert").forEach((el) => {
+        el.style.opacity = "0";
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 3000);
+  </script>
+</body>
+</html>

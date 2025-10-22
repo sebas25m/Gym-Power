@@ -1,0 +1,66 @@
+services:
+  postgres:
+    container_name: postgres_gym
+    image: postgres:latest
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d gymdb"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: Gym2025@
+      POSTGRES_DB: gymdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - gym_data:/var/lib/postgresql/data
+    networks:
+      - gym_backend
+
+  pgadmin:
+    container_name: pgadmin_gym
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: sebastian-montoyar@unilibre.edu.co
+      PGADMIN_DEFAULT_PASSWORD: Gym@dmin2025@
+    ports:
+      - "5497:80"
+    depends_on:
+      - postgres
+    networks:
+      - gym_backend
+
+  web:
+    container_name: django_gym
+    build: .
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=gym_power.settings
+      - PYTHONUNBUFFERED=1
+      - DJANGO_DEBUG=True
+      - DATABASE_HOST=postgres
+      - DATABASE_NAME=gymdb
+      - DATABASE_USER=admin
+      - DATABASE_PASSWORD=Gym2025@
+      - DATABASE_PORT=5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - gym_backend
+
+networks:
+  gym_backend:
+    driver: bridge
+
+
+volumes:
+  gym_data:

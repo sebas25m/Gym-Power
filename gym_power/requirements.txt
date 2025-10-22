@@ -1,0 +1,10 @@
+django
+psycopg2-binary
+psycopg2
+djangorestframework
+django-filter
+reportlab
+pandas
+openpyxl
+requests
+numpy
